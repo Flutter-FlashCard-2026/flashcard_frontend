@@ -1,3 +1,4 @@
+import 'package:flash_card/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,21 +10,27 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  // Controller 가져오기
+  final _authController = Get.find<AuthController>();
+
+  // 입력창 컨트롤러
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _login() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    print('Email: ${email}, Password: ${password}');
-    Get.offNamed('/home');
+  // 로그인 버튼 눌렀을 때
+  Future<void> _login() async {
+    // AuthController의 login() 호출
+    final success = await _authController.login(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+    );
+    if (success) {
+      // 로그인 성공! 홈 화면으로 이동 (뒤로가기 불가)
+      Get.offAllNamed('/home');
+    } else {
+      // 실패시 에러 메시지 표시
+      Get.snackbar('로그인 실패', _authController.error.value);
+    }
   }
 
   @override
@@ -37,15 +44,21 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 로고
-              const Icon(Icons.flutter_dash, size: 80, color: Colors.blue),
-              const SizedBox(height: 16),  // 빈 공간
+              Center(
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 16), // 빈 공간
               const Text(
-                'Memory Word',
+                'MemoryWord',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 48),   // 빈 공간
-              
+              const SizedBox(height: 48), // 빈 공간
               // 이메일 입력
               TextField(
                 controller: _emailController,
@@ -72,21 +85,26 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
 
               // 로그인 버튼
-              ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+              Obx(
+                () => ElevatedButton(
+                  onPressed: _authController.isLoading.value ? null : _login,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: _authController.isLoading.value
+                      ? const CircularProgressIndicator()
+                      : const Text('로그인'),
                 ),
-                child: const Text('로그인', style: TextStyle(fontSize: 16)),
               ),
               const SizedBox(height: 16),
 
               // 회원가입 링크
               TextButton(
-                onPressed: () => Get.toNamed('/register'), 
-                child: const Text('계정이 없으신가요? 회원가입')),
+                onPressed: () => Get.toNamed('/register'),
+                child: const Text('계정이 없으신가요? 회원가입'),
+              ),
             ],
           ),
         ),

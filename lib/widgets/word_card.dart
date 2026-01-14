@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class WordCard extends StatelessWidget {
-  final String eng; // 영어 단어
-  final String kor; // 한글 뜻
+  final String word; // 단어
+  final String meaning; // 뜻
 
   const WordCard({
     super.key,
-    required this.eng,
-    required this.kor,
+    required this.word,
+    required this.meaning,
   });
 
   @override
@@ -29,11 +29,11 @@ class WordCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            eng,
+            word,
             style: const TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
-              color: Colors.blueAccent,
+              color: Colors.orangeAccent,
             ),
           ),
           const SizedBox(height: 20),
@@ -46,7 +46,7 @@ class WordCard extends StatelessWidget {
           const SizedBox(height: 20),
 
           Text(
-            kor,
+            meaning,
             style: const TextStyle(
               fontSize: 24,
               color: Colors.black87,

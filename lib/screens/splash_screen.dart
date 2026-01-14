@@ -26,14 +26,14 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/logo.jpg',
+              'assets/images/logo.png',
               width: 80,
               height: 80,
               fit: BoxFit.cover,  
             ),
             SizedBox(height: 16),
             Text(
-              'Memory Word',
+              'MemoryWord',
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 24),

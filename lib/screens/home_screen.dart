@@ -10,9 +10,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // 임시 데이터
     final List<Map<String, String>> words = [
-      {'eng': 'Apple', 'kor': '사과'},
-      {'eng': 'Banana', 'kor': '바나나'},
-      {'eng': 'Computer', 'kor': '컴퓨터'},
+      {'eng': '토익 단어장', 'kor': '사과'},
+      {'eng': '코딩 용어 단어장', 'kor': '바나나'},
+      {'eng': 'JVM', 'kor': 'Java Virtual Machine'},
       {'eng': 'Flutter', 'kor': '플러터'},
       {'eng': 'Dart', 'kor': '다트'},
     ];
@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Memory Word'),
+        title: const Text('MemoryWord'),
         actions: [
           IconButton(
             onPressed: () => Get.toNamed('/profile'),
@@ -45,8 +45,8 @@ class HomeScreen extends StatelessWidget {
           itemWidth: 350.0,
           itemBuilder: (BuildContext context, int index) {
             return WordCard(
-              eng: words[index]['eng']!,
-              kor: words[index]['kor']!
+              word: words[index]['eng']!,
+              meaning: words[index]['kor']!
             );
           },
           pagination: const SwiperPagination(

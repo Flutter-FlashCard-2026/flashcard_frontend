@@ -1,3 +1,4 @@
+import 'package:flash_card/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,28 +10,32 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final _authController = Get.find<AuthController>();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
-  final _usernameController = TextEditingController();
+
+  Future<void> _register() async {
+    final success = await _authController.register(
+      email: _emailController.text.trim(), 
+      password: _passwordController.text.trim(), 
+      name: _nameController.text.trim(), 
+    );
+
+    if (success) {
+      Get.offAllNamed('/login');
+    } else {
+      Get.snackbar('회원가입 실패', _authController.error.value);
+    }
+  }
 
   @override 
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
-    _usernameController.dispose();
     super.dispose();
-  }
-  
-  Future<void> _register() async {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty || _nameController.text.isEmpty || _usernameController.text.isEmpty) {
-      return;
-    }
-    print("입력한 이메일은 : ${_emailController.text}");
-    print("입력한 비밀번호는 : ${_passwordController.text}");
-    _emailController.text = '';
-    _passwordController.text = '';
   }
 
   @override
@@ -50,18 +55,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   labelText: '이름',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // 사용자명 입력
-              TextField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: '사용자명 (@username)',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.alternate_email),
                 ),
               ),
               const SizedBox(height: 16),
@@ -91,15 +84,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 16),
 
               // 회원가입 버튼
-              ElevatedButton(
-                onPressed: _register,
+              Obx(()=> ElevatedButton(
+                onPressed: _authController.isLoading.value ? null : _register,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.orange,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('회원가입', style: TextStyle(fontSize: 16)),
-              ),
+                child: _authController.isLoading.value 
+                  ? const CircularProgressIndicator()
+                  : const Text('회원가입'),
+              )),
               const SizedBox(height: 16),
 
               // 로그인 링크

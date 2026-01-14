@@ -1,10 +1,21 @@
+import 'package:flash_card/controllers/auth_controller.dart';
+import 'package:flash_card/controllers/voca_controller.dart';
+import 'package:flash_card/controllers/word_controller.dart';
+import 'package:flash_card/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'app.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
-  // Flutter 엔진과 위젯 바인딩 초기화
+  // flutter 바인딩
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 의존성 주입
+  Get.put(ApiService());                  // 1. API 서비스 
+  Get.put(AuthController());              // 2. 인증 컨트롤러
+  Get.put(VocaController());
+  Get.lazyPut(() => WordController(), fenix: true);
 
   // 한국어 설정
   timeago.setLocaleMessages('ko', timeago.KoMessages());

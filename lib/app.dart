@@ -1,10 +1,11 @@
+import 'package:flash_card/screens/voca_screen.dart';
+import 'package:flash_card/screens/word_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:flash_card/screens/compose_screen.dart';
 import 'package:flash_card/screens/home_screen.dart';
 import 'package:flash_card/screens/login_screen.dart';
-import 'package:flash_card/screens/profile_screen.dart';
 import 'package:flash_card/screens/register_screen.dart';
 import 'package:flash_card/screens/splash_screen.dart';
 
@@ -17,14 +18,15 @@ class MyApp extends StatelessWidget {
       title: 'Memory Word',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
-      initialRoute: '/',
+      initialRoute: '/voca',
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/register', page: () => const RegisterScreen()),
         GetPage(name: '/home', page: () => const HomeScreen()),
         GetPage(name: '/compose', page: () => const ComposeScreen()),
-        GetPage(name: '/profile', page: () => const ProfileScreen()),
+        GetPage(name: '/voca', page: () => const VocaScreen()),
+        GetPage(name: '/word', page: () => const WordScreen()),
       ],
     );
   }
