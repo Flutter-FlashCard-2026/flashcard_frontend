@@ -12,26 +12,35 @@ class WordScreen extends StatelessWidget {
     final wordController = Get.find<WordController>();
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        // TODO: 단어 추가 화면으로 이동 (나중에 구현)
-        onPressed: () {}, 
-        child: const Icon(Icons.add),
-      ),
+      backgroundColor: const Color(0xFFF5F5F5), // 배경색 살짝 회색
+      // 메뉴바 연결
+      drawer: _buildDrawer(context, wordController),
+
       appBar: AppBar(
-        title: Obx(() => Text(wordController.currentVoca.value?.title ?? '단어장')),
-        actions: [
-          IconButton(
-            onPressed: () => Get.toNamed('/profile'),
-            icon: const Icon(Icons.person)
+        centerTitle: true,
+        elevation: 0,
+        title: Obx(
+          () => Text(
+            wordController.currentVoca.value?.title ?? '단어장',
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+        ),
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        actions: [
+          // 로그아웃은 메뉴바 안에도 넣을 수 있어서, 여기선 빼거나 유지하셔도 됩니다.
+          // 일단 유지하겠습니다.
           IconButton(
             onPressed: () => Get.offAllNamed('/login'),
-            icon: const Icon(Icons.logout)
-          )
+            icon: const Icon(Icons.logout),
+          ),
         ],
       ),
       body: Obx(() {
-        // 로딩바
         if (wordController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -41,17 +50,18 @@ class WordScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.note_alt_outlined, size: 60, color: Colors.grey),
+                Icon(Icons.style_outlined, size: 80, color: Colors.grey[400]),
                 const SizedBox(height: 16),
-                const Text("아직 등록된 단어가 없습니다.\n+ 버튼을 눌러 단어를 추가해보세요!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey)),
+                Text(
+                  "아직 등록된 단어가 없습니다.\n'+' 버튼을 눌러 추가해보세요!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                ),
               ],
             ),
           );
         }
 
-        // 단어가 있으면 카드 보여주기
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 40.0),
           child: Swiper(
@@ -60,28 +70,144 @@ class WordScreen extends StatelessWidget {
             scale: 0.9,
             layout: SwiperLayout.STACK,
             itemWidth: 350.0,
-            
-            // 여기서 데이터를 하나씩 꺼내서 카드에 넣어줌
             itemBuilder: (BuildContext context, int index) {
-              final word = wordController.words[index]; // 리스트에서 하나 꺼냄
-              
+              final word = wordController.words[index];
               return WordCard(
-                word: word.term,
+                word: word.word,
                 meaning: word.meaning,
+                isMemorized: word.memorized,
+                onDontKnow: () {
+                  wordController.updateMemorizedStatus(word.id, false);
+                },
+                onKnow: () {
+                  wordController.updateMemorizedStatus(word.id, true);
+                },
               );
             },
-            
             pagination: const SwiperPagination(
-              builder: DotSwiperPaginationBuilder(
-                activeColor: Color.fromARGB(255, 239, 178, 88),
-                color: Colors.grey,
-              ),
+              builder: DotSwiperPaginationBuilder(color: Colors.grey),
               alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(bottom: 20)
+              margin: EdgeInsets.only(bottom: 20),
             ),
           ),
         );
       }),
+    );
+  }
+
+  // 메뉴바
+  Widget _buildDrawer(BuildContext context, WordController controller) {
+    return Drawer(
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(
+              top: 50,
+              left: 20,
+              right: 20,
+              bottom: 20,
+            ),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFFB300),
+                  Color(0xFFFF8F00),
+                ], // 노랑 -> 주황 그라데이션
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(30), // 오른쪽 아래만 둥글게
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.menu_book_rounded,
+                  size: 40,
+                  color: Colors.white,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "현재 학습 중",
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                const SizedBox(height: 5),
+                // 현재 단어장 이름 표시
+                Obx(
+                  () => Text(
+                    controller.currentVoca.value?.title ?? '단어장',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // 메뉴 리스트
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                ListTile(
+                  leading: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.grey,
+                  ),
+                  title: const Text('단어장 목록으로 나가기'),
+                  onTap: () {
+                    Get.back(); // 드로어 닫기
+                    Get.back(); // 이전 화면으로 돌아가기
+                  },
+                ),
+
+                const Divider(indent: 20, endIndent: 20), // 구분선
+
+                ListTile(
+                  leading: const Icon(
+                    Icons.format_list_bulleted,
+                    color: Colors.blueAccent,
+                  ),
+                  title: const Text('단어 목록 관리'),
+                  subtitle: const Text('추가, 수정 및 삭제'),
+                  onTap: () {
+                    Get.back();
+                    Get.toNamed('/wordList');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.quiz_outlined,
+                    color: Colors.purpleAccent,
+                  ),
+                  title: const Text('퀴즈 모드'),
+                  onTap: () {
+                    Get.back();
+                    // TODO: 퀴즈 페이지 이동
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.refresh, color: Colors.green),
+                  title: const Text('암기 상태 초기화'),
+                  onTap: () {
+                    Get.back();
+                    // TODO: 초기화 로직
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

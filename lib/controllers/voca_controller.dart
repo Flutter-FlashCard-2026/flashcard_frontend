@@ -14,7 +14,7 @@ class VocaController extends GetxController {
     loadMyVocas(); // Controller 생성시 자동으로 단어장 로드
   }
 
-  // 타임 라인 로드
+  // 단어장 로드
   Future<void> loadMyVocas() async {
     isLoading.value = true;
     try {

@@ -1,7 +1,7 @@
 class Word {
   final int id;
   final int vocaId;
-  final String term;
+  final String word;
   final String meaning;
   final bool memorized;
   final DateTime createdAt;
@@ -9,7 +9,7 @@ class Word {
   Word({
     required this.id,
     required this.vocaId,
-    required this.term,
+    required this.word,
     required this.meaning,
     this.memorized = false,
     required this.createdAt,
@@ -20,7 +20,7 @@ class Word {
     return Word(
       id: json['id'], 
       vocaId: json['voca_id'], 
-      term: json['term'], 
+      word: json['word'], 
       meaning: json['meaning'], 
       memorized: json['memorized'] ?? false,
       createdAt: json['created_at'] != null 
@@ -30,8 +30,8 @@ class Word {
   }
 
   // copyWith: 일부 값만 바꾼 새 객체 생성
-  Word copyWith({String? term, String? meaning, bool? memorized}) {
-    return Word(id: id, vocaId: vocaId,  term: term ?? this.term, meaning: meaning ?? this.meaning,
+  Word copyWith({String? word, String? meaning, bool? memorized}) {
+    return Word(id: id, vocaId: vocaId,  word: word ?? this.word, meaning: meaning ?? this.meaning,
       memorized: memorized ?? this.memorized, createdAt: createdAt);
   }
 }

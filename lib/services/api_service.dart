@@ -86,7 +86,7 @@ class ApiService extends GetConnect {
       },
     ];
     // 📝 [나중에 실제 서버 연결할 때 쓸 코드]
-    // final res = await get('/users/me/vocas');
+    // final res = await get('/vocas');
 
     // if (res.statusCode == 200) {
     //   return res.body['data'] ?? [];
@@ -123,21 +123,21 @@ class ApiService extends GetConnect {
         {
           "id": 1,
           "voca_id": 1,
-          "term": "Apple",
+          "word": "Apple",
           "meaning": "사과",
           "created_at": DateTime.now().toIso8601String(),
         },
         {
           "id": 2,
           "voca_id": 1,
-          "term": "Banana",
+          "word": "Banana",
           "meaning": "바나나",
           "created_at": DateTime.now().toIso8601String(),
         },
         {
           "id": 3,
           "voca_id": 1,
-          "term": "Computer",
+          "word": "Computer",
           "meaning": "컴퓨터",
           "created_at": DateTime.now().toIso8601String(),
         },
@@ -147,14 +147,14 @@ class ApiService extends GetConnect {
         {
           "id": 4,
           "voca_id": 2,
-          "term": "hello",
+          "word": "hello",
           "meaning": "안녕하세요",
           "created_at": DateTime.now().toIso8601String(),
         },
         {
           "id": 5,
           "voca_id": 2,
-          "term": "thank you",
+          "word": "thank you",
           "meaning": "고맙습니다",
           "created_at": DateTime.now().toIso8601String(),
         },
