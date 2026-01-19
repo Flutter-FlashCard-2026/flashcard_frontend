@@ -92,58 +92,49 @@ class ApiService extends GetConnect {
     return res.statusCode == 200;
   }
 
-  // 단어 목록 조회
+  // ============ 단어 ==============
+  // 1. 단어 목록 조회
   Future<List<dynamic>> getWords(int vocaId) async {
-    // 목데이터
-    // if (vocaId == 1) {
-    //   return [
-    //     {
-    //       "id": 1,
-    //       "voca_id": 1,
-    //       "word": "Apple",
-    //       "meaning": "사과",
-    //       "created_at": DateTime.now().toIso8601String(),
-    //     },
-    //     {
-    //       "id": 2,
-    //       "voca_id": 1,
-    //       "word": "Banana",
-    //       "meaning": "바나나",
-    //       "created_at": DateTime.now().toIso8601String(),
-    //     },
-    //     {
-    //       "id": 3,
-    //       "voca_id": 1,
-    //       "word": "Computer",
-    //       "meaning": "컴퓨터",
-    //       "created_at": DateTime.now().toIso8601String(),
-    //     },
-    //   ];
-    // } else if (vocaId == 2) {
-    //   return [
-    //     {
-    //       "id": 4,
-    //       "voca_id": 2,
-    //       "word": "hello",
-    //       "meaning": "안녕하세요",
-    //       "created_at": DateTime.now().toIso8601String(),
-    //     },
-    //     {
-    //       "id": 5,
-    //       "voca_id": 2,
-    //       "word": "thank you",
-    //       "meaning": "고맙습니다",
-    //       "created_at": DateTime.now().toIso8601String(),
-    //     },
-    //   ];
-    // } else {
-    //   return []; // 나머지는 빈 단어장
-    // }
-
     final res = await get('/vocas/$vocaId/words');
+    
     if (res.statusCode == 200) {
-      return res.body['data'] ?? [];
+      return res.body ?? [];
     }
     return [];
+  }
+
+  // 2. 단어 추가
+  // POST /vocas/:vocaId/words
+  // Body: { word, meaning }
+  Future<Response> addWord(int vocaId, String word, String meaning) async {
+    return await post('/vocas/$vocaId/words', {
+      'word': word,
+      'meaning': meaning,
+    });
+  }
+
+  // 3. 단어 수정
+  // PUT /words/:wordId
+  // Body: { word, meaning }
+  Future<bool> updateWord(int wordId, String word, String meaning) async {
+    final res = await put('/words/$wordId', {
+      'word': word,
+      'meaning': meaning,
+    });
+    return res.statusCode == 200;
+  }
+
+  // 4. 단어 삭제
+  // DELETE /words/:wordId
+  Future<bool> deleteWord(int wordId) async {
+    final res = await delete('/words/$wordId');
+    return res.statusCode == 200;
+  }
+
+  // 5. 암기 상태 변경
+  // PATCH /words/:wordId
+  Future<bool> toggleMemorized(int wordId) async {
+    final res = await patch('/words/$wordId', {});
+    return res.statusCode == 200;
   }
 }

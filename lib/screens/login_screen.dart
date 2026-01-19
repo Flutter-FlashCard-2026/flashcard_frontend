@@ -25,8 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
     if (success) {
-      // 로그인 성공! 홈 화면으로 이동 (뒤로가기 불가)
-      Get.offAllNamed('/home');
+      Get.offAllNamed('/voca');
     } else {
       // 실패시 에러 메시지 표시
       Get.snackbar('로그인 실패', _authController.error.value);

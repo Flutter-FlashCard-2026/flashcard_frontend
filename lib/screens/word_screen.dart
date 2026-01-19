@@ -32,8 +32,6 @@ class WordScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          // 로그아웃은 메뉴바 안에도 넣을 수 있어서, 여기선 빼거나 유지하셔도 됩니다.
-          // 일단 유지하겠습니다.
           IconButton(
             onPressed: () => Get.offAllNamed('/login'),
             icon: const Icon(Icons.logout),
@@ -53,7 +51,7 @@ class WordScreen extends StatelessWidget {
                 Icon(Icons.style_outlined, size: 80, color: Colors.grey[400]),
                 const SizedBox(height: 16),
                 Text(
-                  "아직 등록된 단어가 없습니다.\n'+' 버튼을 눌러 추가해보세요!",
+                  "아직 등록된 단어가 없습니다.\n메뉴바를 눌러 단어를 추가해보세요!",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey[600], fontSize: 16),
                 ),
@@ -75,7 +73,7 @@ class WordScreen extends StatelessWidget {
               return WordCard(
                 word: word.word,
                 meaning: word.meaning,
-                isMemorized: word.memorized,
+                memorized: word.memorized,
                 onDontKnow: () {
                   wordController.updateMemorizedStatus(word.id, false);
                 },

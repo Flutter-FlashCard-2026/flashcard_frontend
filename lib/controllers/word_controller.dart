@@ -43,59 +43,84 @@ class WordController extends GetxController {
     }
   }
 
-  // 단어 암기 상태 체크용
-  void updateMemorizedStatus(int wordId, bool memorized) {
-    final index = words.indexWhere((w) => w.id == wordId);
-    if (index != -1) {
-      words[index] = words[index].copyWith(memorized: memorized);
-    }
+  // 단어 추가
+  Future<void> addWord(String wordText, String meaning) async {
+    if (wordText.isEmpty || meaning.isEmpty) return;
+    try {
+      isLoading.value = true;
 
-    // 2. (나중에 구현) 서버나 DB에도 저장
-    // _repository.updateStatus(wordId, isMemorized);
+      // API 호출
+      final res = await _api.addWord(currentVoca.value!.id, wordText, meaning);
+
+      if (res.statusCode == 201) {
+        await loadWords(); // 목록 새로고침
+        Get.back(); // 입력창 닫기
+        Get.snackbar("성공", "단어가 추가되었습니다.");
+      } else {
+        Get.snackbar("실패", "단어 추가 실패");
+      }
+    } catch (e) {
+      print(e);
+      Get.snackbar("오류", "네트워크 오류가 발생했습니다.");
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  // 단어 추가
-    Future<void> addWord(String term, String meaning) async {
-      try {
-        isLoading.value = true;
-        // TODO: 백엔드 API 호출 (POST /vocas/:id/words)
-        // await _api.addWord(currentVoca.value!.id, term, meaning);
+  // 단어 수정
+  Future<void> updateWord(int wordId, String wordText, String meaning) async {
+    try {
+      isLoading.value = true;
 
-        // UI 테스트용 가짜 데이터 추가 (나중에 API 연결 후 삭제)
-        // words.add(Word(id: 999, term: term, meaning: meaning, ...));
+      // API 호출
+      final success = await _api.updateWord(wordId, wordText, meaning);
 
-        // await getWords(currentVoca.value!.id); // 목록 새로고침
-        Get.back(); // 창 닫기
-        Get.snackbar("성공", "단어가 추가되었습니다.");
-      } catch (e) {
-        // 에러 처리
-      } finally {
-        isLoading.value = false;
+      if (success) {
+        await loadWords(); // 목록 새로고침 (혹은 로컬 리스트만 수정해도 됨)
+        Get.back(); // 입력창 닫기
+        Get.snackbar("성공", "수정되었습니다.");
+      } else {
+        Get.snackbar("실패", "수정에 실패했습니다.");
       }
+    } catch (e) {
+      Get.snackbar("오류", "네트워크 오류");
+    } finally {
+      isLoading.value = false;
     }
+  }
 
-    // 단어 수정
-    Future<void> updateWord(int wordId, String term, String meaning) async {
-      try {
-        // TODO: 백엔드 API 호출 (PUT /words/:id)
-        // await getWords(currentVoca.value!.id); // 목록 새로고침
-        Get.back(); // 창 닫기
-        Get.snackbar("성공", "단어가 수정되었습니다.");
-      } catch (e) {
-        // 에러 처리
-      }
-    }
+  // 단어 삭제
+  Future<void> deleteWord(int wordId) async {
+    try {
+      // API 호출
+      final success = await _api.deleteWord(wordId);
 
-    // 단어 삭제
-    Future<void> deleteWord(int wordId) async {
-      try {
-        // TODO: 백엔드 API 호출 (DELETE /words/:id)
-        // await _api.deleteWord(wordId);
-
-        // UI 즉시 반영 (리스트에서 제거)
+      if (success) {
+        // 성공 시 리스트에서 즉시 제거 (새로고침보다 빠름)
         words.removeWhere((w) => w.id == wordId);
-      } catch (e) {
-        Get.snackbar("오류", "삭제에 실패했습니다.");
+        Get.snackbar("삭제", "단어가 삭제되었습니다.");
+      } else {
+        Get.snackbar("실패", "삭제에 실패했습니다.");
+      }
+    } catch (e) {
+      Get.snackbar("오류", "네트워크 오류");
+    }
+  }
+
+  // 암기 상태 변경 (토글)
+  Future<void> updateMemorizedStatus(int wordId, bool currentStatus) async {
+    final index = words.indexWhere((w) => w.id == wordId);
+    if (index != -1) {
+      words[index] = words[index].copyWith(memorized: !currentStatus);
+    }
+
+    try {
+      await _api.toggleMemorized(wordId);
+    } catch (e) {
+      if (index != -1) {
+        words[index] = words[index].copyWith(memorized: currentStatus);
+        Get.snackbar("오류", "상태 변경 실패");
       }
     }
+  }
 }

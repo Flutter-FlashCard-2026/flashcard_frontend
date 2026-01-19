@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class WordCard extends StatelessWidget {
   final String word;
   final String meaning;
-  final bool isMemorized; // 암기 여부 (색상 표시용)
+  final bool memorized; // 암기 여부 (색상 표시용)
   final VoidCallback onKnow; // '알아요' 버튼 클릭 시
   final VoidCallback onDontKnow; // '몰라요' 버튼 클릭 시
 
@@ -11,7 +11,7 @@ class WordCard extends StatelessWidget {
     super.key,
     required this.word,
     required this.meaning,
-    required this.isMemorized,
+    required this.memorized,
     required this.onKnow,
     required this.onDontKnow,
   });
@@ -30,7 +30,7 @@ class WordCard extends StatelessWidget {
           ),
         ],
         // 암기 완료된 카드는 테두리에 초록색 표시
-        border: isMemorized 
+        border: memorized 
             ? Border.all(color: Colors.green.withOpacity(0.5), width: 3) 
             : null,
       ),
@@ -60,7 +60,7 @@ class WordCard extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                if (isMemorized) ...[
+                if (memorized) ...[
                   const SizedBox(height: 10),
                   const Chip(
                     label: Text("암기 완료!", style: TextStyle(color: Colors.white)),
