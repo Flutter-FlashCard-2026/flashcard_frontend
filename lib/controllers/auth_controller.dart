@@ -1,3 +1,4 @@
+import 'package:flash_card/controllers/voca_controller.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '/./models/user.dart';
@@ -20,6 +21,19 @@ class AuthController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // 저장된 토큰 확인
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final savedToken = box.read('token');
+    if (savedToken != null) {
+      print("✅ 저장된 토큰 발견! 자동 로그인");
+      
+      Future.microtask(() {
+        Get.offAllNamed('/voca'); // 메인(단어장) 화면으로 이동
+      });
+    }
   }
 
   // 회원가입
@@ -64,6 +78,10 @@ class AuthController extends GetxController {
         final data = response.body;
         box.write('token', data['token']);
         user.value = User.fromJson(data['user']);
+
+        if (Get.isRegistered<VocaController>()) {
+          Get.find<VocaController>().loadMyVocas();
+        }
         return true;
       } else {
         error.value = response.body['message'] ?? '로그인에 실패했습니다';

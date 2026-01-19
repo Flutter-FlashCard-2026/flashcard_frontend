@@ -130,4 +130,27 @@ class WordController extends GetxController {
       }
     }
   }
+
+  // 암기 상태 초기화 함수
+  Future<void> resetWordStatus() async {
+    if (currentVoca.value == null) return;
+    
+    try {
+      isLoading.value = true;
+      final success = await _api.resetVocaStats(currentVoca.value!.id);
+      
+      if (success) {
+        // 성공하면 목록을 서버에서 다시 받아옴
+        await loadWords(); 
+        
+        Get.snackbar("완료", "모든 단어의 암기 상태가 초기화되었습니다.");
+      } else {
+        Get.snackbar("실패", "초기화에 실패했습니다.");
+      }
+    } catch (e) {
+      Get.snackbar("오류", "네트워크 오류가 발생했습니다.");
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

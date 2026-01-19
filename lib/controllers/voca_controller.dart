@@ -21,7 +21,6 @@ class VocaController extends GetxController {
       final data = await _api.getMyVocas();
       myVocas.value = data.map((json) => Voca.fromJson(json)).toList();
     } catch (e) {
-      print(e);
       Get.snackbar('오류', '단어장을 불러올 수 없습니다');
     } finally {
       isLoading.value = false; // 성공이든 실패든 로딩 끝

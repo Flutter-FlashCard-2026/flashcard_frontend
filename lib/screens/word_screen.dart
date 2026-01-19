@@ -198,7 +198,19 @@ class WordScreen extends StatelessWidget {
                   title: const Text('암기 상태 초기화'),
                   onTap: () {
                     Get.back();
-                    // TODO: 초기화 로직
+                    Get.defaultDialog(
+                      title: "초기화",
+                      titleStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      middleText: "정말로 모든 단어의 암기 상태를\n'몰라요'로 초기화하시겠습니까?",
+                      textConfirm: "초기화",
+                      textCancel: "취소",
+                      confirmTextColor: Colors.white,
+                      buttonColor: Colors.green,
+                      onConfirm: () {
+                        Get.back(); // 다이얼로그 닫기
+                        controller.resetWordStatus(); 
+                      },
+                    );
                   },
                 ),
               ],

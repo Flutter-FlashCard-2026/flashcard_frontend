@@ -137,4 +137,11 @@ class ApiService extends GetConnect {
     final res = await patch('/words/$wordId', {});
     return res.statusCode == 200;
   }
+
+  // 단어장 암기 상태 초기화
+  // POST /vocas/:vocaId/reset
+  Future<bool> resetVocaStats(int vocaId) async {
+    final res = await post('/vocas/$vocaId/reset', {});
+    return res.statusCode == 200;
+  }
 }
