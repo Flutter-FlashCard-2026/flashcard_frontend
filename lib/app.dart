@@ -2,7 +2,6 @@ import 'package:flash_card/screens/study_screen.dart';
 import 'package:flash_card/screens/voca_screen.dart';
 import 'package:flash_card/screens/word_list.screen.dart';
 import 'package:flash_card/screens/word_screen.dart';
-import 'package:flash_card/widgets/study_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -19,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Memory Word',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
-      initialRoute: '/voca',
+      initialRoute: '/',
       getPages: [
         GetPage(name: '/', page: () => const SplashScreen()),
         GetPage(name: '/login', page: () => const LoginScreen()),
