@@ -22,7 +22,7 @@ class Word {
       vocaId: json['voca_id'], 
       word: json['word'], 
       meaning: json['meaning'], 
-      memorized: json['memorized'] ?? false,
+      memorized: (json['memorized'] == 1),
       createdAt: json['created_at'] != null 
           ? DateTime.parse(json['created_at']) 
           : DateTime.now(),

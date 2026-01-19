@@ -108,17 +108,24 @@ class WordController extends GetxController {
   }
 
   // 암기 상태 변경 (토글)
-  Future<void> updateMemorizedStatus(int wordId, bool currentStatus) async {
+  Future<void> updateMemorizedStatus(int wordId, bool nextStatus) async {
     final index = words.indexWhere((w) => w.id == wordId);
-    if (index != -1) {
-      words[index] = words[index].copyWith(memorized: !currentStatus);
-    }
+    if (index == -1) return;
 
+    final currentWord = words[index];
+
+    if (currentWord.memorized == nextStatus) return;
+
+    // 화면 먼저 갱신 (Optimistic Update)
+    words[index] = currentWord.copyWith(memorized: nextStatus);
+
+    // 백엔드 요청
     try {
       await _api.toggleMemorized(wordId);
     } catch (e) {
+      // 실패하면 다시 원래대로 되돌림
       if (index != -1) {
-        words[index] = words[index].copyWith(memorized: currentStatus);
+        words[index] = currentWord; // 원래 상태로 복구
         Get.snackbar("오류", "상태 변경 실패");
       }
     }

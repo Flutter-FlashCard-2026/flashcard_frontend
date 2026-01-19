@@ -93,7 +93,7 @@ class ApiService extends GetConnect {
   }
 
   // ============ 단어 ==============
-  // 1. 단어 목록 조회
+  // 단어 목록 조회
   Future<List<dynamic>> getWords(int vocaId) async {
     final res = await get('/vocas/$vocaId/words');
     
@@ -103,7 +103,7 @@ class ApiService extends GetConnect {
     return [];
   }
 
-  // 2. 단어 추가
+  // 단어 추가
   // POST /vocas/:vocaId/words
   // Body: { word, meaning }
   Future<Response> addWord(int vocaId, String word, String meaning) async {
@@ -113,7 +113,7 @@ class ApiService extends GetConnect {
     });
   }
 
-  // 3. 단어 수정
+  // 단어 수정
   // PUT /words/:wordId
   // Body: { word, meaning }
   Future<bool> updateWord(int wordId, String word, String meaning) async {
@@ -124,14 +124,14 @@ class ApiService extends GetConnect {
     return res.statusCode == 200;
   }
 
-  // 4. 단어 삭제
+  // 단어 삭제
   // DELETE /words/:wordId
   Future<bool> deleteWord(int wordId) async {
     final res = await delete('/words/$wordId');
     return res.statusCode == 200;
   }
 
-  // 5. 암기 상태 변경
+  // 암기 상태 변경
   // PATCH /words/:wordId
   Future<bool> toggleMemorized(int wordId) async {
     final res = await patch('/words/$wordId', {});
