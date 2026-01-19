@@ -74,13 +74,13 @@ class _VocaFormSheetState extends State<VocaFormSheet> {
 
               if (isEdit) {
                 // 수정 로직
-                widget.vocaController.editVoca(
+                widget.vocaController.updateVoca(
                   widget.voca!.id, 
                   titleController.text.trim()
                 );
               } else {
                 // 추가 로직
-                widget.vocaController.createVoca(titleController.text.trim());
+                widget.vocaController.addVoca(titleController.text.trim());
               }
               
               Get.back(); // 시트 닫기

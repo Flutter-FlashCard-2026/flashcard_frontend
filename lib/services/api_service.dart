@@ -6,9 +6,7 @@ class ApiService extends GetConnect {
 
   @override
   void onInit() {
-    // 서버 주소를 설정 (나중에 내 서버가 생기면 그쪽의 ip나 Domain으로 전환)
-    httpClient.baseUrl = 'https://minix.jinhyung.kim/api';
-    httpClient.timeout = const Duration(seconds: 30);
+    httpClient.baseUrl = 'http://localhost:3000';
 
     // 토큰 자동 첨부
     httpClient.addRequestModifier<dynamic>((request) async {
@@ -95,12 +93,12 @@ class ApiService extends GetConnect {
   }
 
   // 단어장 생성
-  Future<Response> createVoca(String title) async {
+  Future<Response> addVoca(String title) async {
     return await post('/vocas', {'title': title});
   }
 
   // 단어장 수정
-  Future<bool> editVoca(int id, String title) async {
+  Future<bool> updateVoca(int id, String title) async {
     // 무조건 성공했다고 가정 (테스트용)
     return true;
 

@@ -29,11 +29,11 @@ class VocaController extends GetxController {
   }
 
   // 단어장 생성
-  Future<bool> createVoca(String title) async {
+  Future<bool> addVoca(String title) async {
     // 빈 내용 체크
     if (title.trim().isEmpty) return false;
     try {
-      final res = await _api.createVoca(title);
+      final res = await _api.addVoca(title);
       if (res.statusCode == 201) {
         await loadMyVocas(); // 목록 새로고침 (새 단어장이 보이도록)
         return true;
@@ -44,14 +44,14 @@ class VocaController extends GetxController {
     return false;
   }
 
-  Future<void> editVoca(int id, String newTitle) async {
+  Future<void> updateVoca(int id, String newTitle) async {
     // 빈 제목 방지
     if (newTitle.trim().isEmpty) return;
 
     isLoading.value = true;
     try {
       // 수정 요청 api
-      final success = await _api.editVoca(id, newTitle);
+      final success = await _api.updateVoca(id, newTitle);
       
       if (success) {
         // 성공 시 myVocas 리스트 갱신 (화면 즉시 반영)

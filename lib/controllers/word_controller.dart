@@ -59,7 +59,7 @@ class WordController extends GetxController {
       try {
         isLoading.value = true;
         // TODO: 백엔드 API 호출 (POST /vocas/:id/words)
-        // await _api.createWord(currentVoca.value!.id, term, meaning);
+        // await _api.addWord(currentVoca.value!.id, term, meaning);
 
         // UI 테스트용 가짜 데이터 추가 (나중에 API 연결 후 삭제)
         // words.add(Word(id: 999, term: term, meaning: meaning, ...));

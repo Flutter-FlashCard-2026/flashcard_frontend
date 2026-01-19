@@ -189,10 +189,10 @@ class WordScreen extends StatelessWidget {
                     Icons.quiz_outlined,
                     color: Colors.purpleAccent,
                   ),
-                  title: const Text('퀴즈 모드'),
+                  title: const Text('암기 상태 확인'),
                   onTap: () {
                     Get.back();
-                    // TODO: 퀴즈 페이지 이동
+                    Get.toNamed('/study');
                   },
                 ),
                 ListTile(
