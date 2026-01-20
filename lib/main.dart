@@ -16,7 +16,7 @@ void main() async {
   // 의존성 주입
   Get.put(ApiService());                  // 1. API 서비스 
   Get.put(AuthController());              // 2. 인증 컨트롤러
-  Get.lazyPut(() => VocaController(), fenix: true);
+  Get.put(VocaController());
   Get.lazyPut(() => WordController(), fenix: true);
 
   // 한국어 설정

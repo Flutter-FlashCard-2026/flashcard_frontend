@@ -8,7 +8,9 @@ class WordController extends GetxController {
 
   final Rxn<Voca> currentVoca = Rxn<Voca>();
   final RxList<Word> words = <Word>[].obs;
+  final RxList<Word> studyWords = <Word>[].obs; // 공부용 단어 리스트 (안 외운 단어만 저장)
   final RxBool isLoading = false.obs;
+  final RxBool isStudyLoading = false.obs; // 공부 화면용
 
   @override
   void onInit() {
@@ -134,15 +136,15 @@ class WordController extends GetxController {
   // 암기 상태 초기화 함수
   Future<void> resetWordStatus() async {
     if (currentVoca.value == null) return;
-    
+
     try {
       isLoading.value = true;
       final success = await _api.resetVocaStats(currentVoca.value!.id);
-      
+
       if (success) {
         // 성공하면 목록을 서버에서 다시 받아옴
-        await loadWords(); 
-        
+        await loadWords();
+
         Get.snackbar("완료", "모든 단어의 암기 상태가 초기화되었습니다.");
       } else {
         Get.snackbar("실패", "초기화에 실패했습니다.");
@@ -151,6 +153,23 @@ class WordController extends GetxController {
       Get.snackbar("오류", "네트워크 오류가 발생했습니다.");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // 공부용 단어 불러오기
+  Future<void> loadStudyWords() async {
+    if (currentVoca.value == null) return;
+    isStudyLoading.value = true;
+
+    try {
+      // 안 외운 것만 요청
+      final data = await _api.getWords(currentVoca.value!.id, memorized: false);
+      studyWords.value = data.map((json) => Word.fromJson(json)).toList();
+      print("공부할 단어 개수: ${studyWords.length}");
+    } catch (e) {
+      print(e);
+    } finally {
+      isStudyLoading.value = false;
     }
   }
 }

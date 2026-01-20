@@ -94,8 +94,13 @@ class ApiService extends GetConnect {
 
   // ============ 단어 ==============
   // 단어 목록 조회
-  Future<List<dynamic>> getWords(int vocaId) async {
-    final res = await get('/vocas/$vocaId/words');
+  Future<List<dynamic>> getWords(int vocaId, {bool? memorized}) async {
+    String query = '';
+    if (memorized != null) {
+      query = '?memorized=$memorized';
+    }
+
+    final res = await get('/vocas/$vocaId/words$query');
     
     if (res.statusCode == 200) {
       return res.body ?? [];
